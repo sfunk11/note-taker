@@ -4,8 +4,8 @@ const path = require('path');
 
 const app = express();
  
-require("./app/routing/html-routes")(app);
-require("./app/routing/api-routes")(app);
+require("./routing/html-routes")(app);
+require("./routing/api-routes")(app);
 
 let PORT = process.env.PORT || 8080;
 
