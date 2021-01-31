@@ -1,21 +1,32 @@
 const fs = require("fs");
 
 module.exports = function (app) {
-    let notedata = JSON.parse(fs.readFileSync('./db/db.json', 'utf-8'))
+    let notedata = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
     
-    app.get("/api/notes", function (req,res) {
+    app.get("/api/notes", (req,res) => {
         console.log(notedata);
         return res.json(notedata);
     })
 
-    // app.post("/api/notes", function(req,res){
-    //         notesData.push(req.body);
-    //         res.end
-    // })
+    app.post('/api/notes', (req, res) => {
+        let lastId;
+        if (notedata.length) {
+            lastId = Math.max(...(notedata.map(note => note.id)));
+        } else {
+            lastId = 0;
+        }
+        //Sets the id so that the note can be referenced
+        const id = lastId + 1;
 
-    // app.delete("/api/notes", function (req,res){
-    //     tableData = [];
-    //     waitingListData = [];
-    // })
+        notedata.push({ id, ...req.body });
+        //Removes last index
+        res.json(notedata.slice(-1));
+    });
+
+    app.delete("/api/notes/:id", (req,res) => {
+        let deletedNote = notedata.find(({id})=> id === JSON.parse(req.params.id));
+        notedata.splice(notedata.indexOf(deletedNote),1);
+        res.end("All Gone!");
+    })
 };
 
