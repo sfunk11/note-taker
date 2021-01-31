@@ -4,7 +4,6 @@ module.exports = function (app) {
     let notedata = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
     
     app.get("/api/notes", (req,res) => {
-        console.log(notedata);
         return res.json(notedata);
     })
 
